@@ -61,7 +61,12 @@ export default {
               self.loading = true;
               self.$axios.post('http://localhost:3000/staffs/login/', data).then(res => {
                 console.log(res.data);
-                this.$myStore.state.user = res.data;
+                self.$myStore.state.user.username = res.data.username;
+                self.$myStore.state.user.password = self.user.password;
+                self.$myStore.state.user.fullname = res.data.fullname;
+                self.$myStore.state.user.access_token = res.data.access_token;
+                self.$myStore.state.user.refresh_token = res.data.refresh_token;
+                console.log(self.$myStore.state.user);
                 self.$router.push('/');
               }).catch(e => {
                 self.loading = false;

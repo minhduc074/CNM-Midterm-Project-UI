@@ -49,15 +49,47 @@ export default {
     return {
       appTitle: "Midterm Project",
       sidebar: false,
-      menuItems: [
-        { title: "Home", path: "/", icon: "home", visiable: false },
-        { title: "Sign Up", path: "/signup", icon: "face" },
-        { title: "Sign In", path: "/Login", icon: "lock_open" }
-      ]
+      menuItems: this.getMenu()
     };
   },
   methods: {
-        
+    getMenu(){
+      var self = this;
+      var menu = [];
+
+      menu.push({ title: "Home", path: "/", icon: "home"});
+      if(self.$myStore.state.user.username == "")
+      {
+        menu.push({ title: "Sign Up", path: "/signup", icon: "face" });
+        menu.push({ title: "Sign In", path: "/Login", icon: "lock_open" });
+      }
+      else
+      {
+        menu.push({ title: self.$myStore.state.user.fullname, path: "/user", icon: "face" });
+        menu.push({ title: "Logout", path: "/logout", icon: "lock_open" });
+      }
+      return menu;
     }
+  },
+  computed: {
+    username() {
+      var self = this;
+      return self.$myStore.state.user.username;
+    },
+    fullname() {
+      var self = this;
+      return self.$myStore.state.user.fullname;
+    }
+  },
+  watch: {
+     username (newUsername, old_username) {
+      console.log(old_username + " => " + newUsername);
+      this.menuItems = this.getMenu();
+    },
+    fullname (newFullname, oldFullname) {
+      console.log(oldFullname + " => " + newFullname);
+      this.menuItems = this.getMenu();
+    }
+  }
 };
 </script>

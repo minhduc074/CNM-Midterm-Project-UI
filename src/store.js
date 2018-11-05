@@ -26,11 +26,11 @@ export default new Vuex.Store({
   state: {
     count: 0,
     user: {
-      username: "1123434",
-      password: "2",
-      fullname: "3",
-      access_token: "4",
-      refresh_token: "5",
+      username: "",
+      password: "",
+      fullname: "",
+      access_token: "",
+      refresh_token: "",
     }
   },
   mutations: {
