@@ -107,7 +107,7 @@ export default {
 
       self.loading = true;
       self.$axios
-        .post("http://localhost:3000/staffs/update/", data)
+        .post( self.$myStore.state.wepAPI.url + "staffs/update/", data)
         .then(res => {
           console.log(res.data);
           self.$myStore.state.user.username = res.data.username;

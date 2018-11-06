@@ -31,7 +31,11 @@ export default new Vuex.Store({
       fullname: "",
       access_token: "",
       refresh_token: "",
-    }
+      role: "",
+    }, 
+    wepAPI: {
+      url: "http://localhost:3000/",
+    },
   },
   mutations: {
     increment (state) {

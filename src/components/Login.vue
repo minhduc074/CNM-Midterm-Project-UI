@@ -23,7 +23,7 @@
                 required></v-text-field>
             </v-flex>
             
-                <select v-model="role">
+                <select v-model="user.role">
                     <option disabled value="">Please select role</option>
                     <option>Admin</option>
                     <option>Staff</option>
@@ -45,9 +45,10 @@ export default {
     return {
       user: {
         username: "",
-        password: ""
+        password: "",
+        role: ""
       },
-      role: ""
+      
     };
   },
   methods: {
@@ -57,17 +58,35 @@ export default {
           // checking if the input is valid
             //if (this.$refs.form.validate()) {
             
-            if (1) {
+            var role_url = "";
+            console.log("role: " + self.user.role)
+
+            if(self.user.role == "Admin")
+              role_url = "admin";
+            else if(self.user.role == "Staff"){
+              role_url = "staffs";
+            }
+            else if(self.user.role == "Driver")
+            {
+              role_url = "driver";
+            }
+            else
+            {
+              console.log("Role error");
+            }
+
+            if (self.username != "" && self.password != "") {
               self.loading = true;
-              self.$axios.post('http://localhost:3000/staffs/login/', data).then(res => {
+              self.$axios.post( self.$myStore.state.wepAPI.url + role_url + '/login/', data).then(res => {
                 console.log(res.data);
                 self.$myStore.state.user.username = res.data.username;
                 self.$myStore.state.user.password = self.user.password;
                 self.$myStore.state.user.fullname = res.data.fullname;
                 self.$myStore.state.user.access_token = res.data.access_token;
                 self.$myStore.state.user.refresh_token = res.data.refresh_token;
+                self.$myStore.state.user.role = role_url;
                 console.log(self.$myStore.state.user);
-                self.$router.push('/');
+                self.$router.push('/' + role_url);
               }).catch(e => {
                 self.loading = false;
                 console.log(e);
