@@ -47,53 +47,57 @@ export default {
         username: "",
         password: "",
         role: ""
-      },
-      
+      }
     };
   },
   methods: {
-        login() {
-            const self = this;
-            const data = {"username": self.user.username, "password": self.user.password};
-          // checking if the input is valid
-            //if (this.$refs.form.validate()) {
-            
-            var role_url = "";
-            console.log("role: " + self.user.role)
+    login() {
+      const self = this;
+      const data = {
+        username: self.user.username,
+        password: self.user.password
+      };
+      // checking if the input is valid
+      //if (this.$refs.form.validate()) {
 
-            if(self.user.role == "Admin")
-              role_url = "admin";
-            else if(self.user.role == "Staff"){
-              role_url = "staffs";
-            }
-            else if(self.user.role == "Driver")
-            {
-              role_url = "driver";
-            }
-            else
-            {
-              console.log("Role error");
-            }
+      var role_url = "";
+      console.log("role: " + self.user.role);
 
-            if (self.username != "" && self.password != "") {
-              self.loading = true;
-              self.$axios.post( self.$myStore.state.wepAPI.url + role_url + '/login/', data).then(res => {
-                console.log(res.data);
-                self.$myStore.state.user.username = res.data.username;
-                self.$myStore.state.user.password = self.user.password;
-                self.$myStore.state.user.fullname = res.data.fullname;
-                self.$myStore.state.user.access_token = res.data.access_token;
-                self.$myStore.state.user.refresh_token = res.data.refresh_token;
-                self.$myStore.state.user.role = role_url;
-                console.log(self.$myStore.state.user);
-                self.$router.push('/' + role_url);
-              }).catch(e => {
-                self.loading = false;
-                console.log(e);
-              })
+      if (self.user.role == "Admin") role_url = "admin";
+      else if (self.user.role == "Staff") {
+        role_url = "staffs";
+      } else if (self.user.role == "Driver") {
+        role_url = "driver";
+      } else {
+        console.log("Role error");
+        return;
+      }
+
+      if (self.username != "" && self.password != "") {
+        self.loading = true;
+        self.$axios
+          .post(self.$myStore.state.wepAPI.url + role_url + "/login/", data)
+          .then(res => {
+            console.log(res.data);
+            self.$myStore.state.user.username = res.data.username;
+            self.$myStore.state.user.password = self.user.password;
+            self.$myStore.state.user.fullname = res.data.fullname;
+            self.$myStore.state.user.access_token = res.data.access_token;
+            self.$myStore.state.user.refresh_token = res.data.refresh_token;
+            self.$myStore.state.user.role = role_url;
+
+            if (self.user.role == "Driver") {
+              self.$myStore.state.user.phone = res.data.phone;
             }
-            
-        }
+            console.log(self.$myStore.state.user);
+            self.$router.push("/" + role_url);
+          })
+          .catch(e => {
+            self.loading = false;
+            console.log(e);
+          });
+      }
     }
+  }
 };
 </script>

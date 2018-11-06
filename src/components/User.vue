@@ -53,6 +53,17 @@
                 label="Password" 
                 type="password">
               </v-text-field>
+
+              <v-text-field 
+                v-if="user && user.role === 'driver'" 
+                prepend-icon="phone" 
+                required 
+                v-model="user.phone" 
+                name="phone" 
+                label="Phone" 
+                type="phone" >
+              </v-text-field>
+
               <!--
               <v-text-field 
                 v-model="this.profile.id" 
@@ -87,7 +98,9 @@ export default {
     return {
       user: {
         username: self.$myStore.state.user.username,
-        password: self.$myStore.state.user.password
+        password: self.$myStore.state.user.password,
+        role: self.$myStore.state.user.role,
+        phone: self.$myStore.state.user.phone
       },
       profile: {
         fullname: self.$myStore.state.user.fullname
@@ -105,14 +118,24 @@ export default {
       // checking if the input is valid
       //if (this.$refs.form.validate()) {
 
+      if (self.user.role == "driver") {
+        data["phone"] = self.user.phone;
+      }
+
       self.loading = true;
       self.$axios
-        .post( self.$myStore.state.wepAPI.url + "staffs/update/", data)
+        .post(
+          self.$myStore.state.wepAPI.url + self.user.role + "/update/",
+          data
+        )
         .then(res => {
           console.log(res.data);
           self.$myStore.state.user.username = res.data.username;
           self.$myStore.state.user.password = self.user.password;
           self.$myStore.state.user.fullname = self.profile.fullname;
+          if (self.$myStore.state.user.role == "driver") {
+            self.$myStore.state.user.phone = self.user.phone;
+          }
           console.log(self.$myStore.state.user);
           self.$router.push("/");
         })

@@ -57,7 +57,7 @@ export default {
       var self = this;
       var menu = [];
 
-      menu.push({ title: "Home", path: "/", icon: "home"});
+      menu.push({ title: "Home", path: "/" + self.$myStore.state.user.role, icon: "home"});
       if(self.$myStore.state.user.username == "")
       {
         menu.push({ title: "Sign Up", path: "/signup", icon: "face" });

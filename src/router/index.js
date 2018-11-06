@@ -8,7 +8,10 @@ const routerOptions = [
   { path: '/login', component: 'Login' },
   { path: '/signup', component: 'Signup' },
   { path: '/user', component: 'User' },
-  { path: '/logout', component: 'Logout' }
+  { path: '/logout', component: 'Logout' },
+  { path: '/admin', component: 'Admin' },
+  { path: '/staffs', component: 'Staff' },
+  { path: '/driver', component: 'Driver' }
 ]
 
 const routes = routerOptions.map(route => {

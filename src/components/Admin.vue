@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h1>The Driver pages</h1>
+    <h1>The Admin pages</h1>
   </div>
 </template>
 

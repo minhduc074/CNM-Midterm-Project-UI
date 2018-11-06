@@ -18,10 +18,10 @@ export default new Vuex.Store({
   }
 })
 */
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex from "vuex";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     count: 0,
@@ -32,14 +32,15 @@ export default new Vuex.Store({
       access_token: "",
       refresh_token: "",
       role: "",
-    }, 
-    wepAPI: {
-      url: "http://localhost:3000/",
+      phone: ""
     },
+    wepAPI: {
+      url: "http://localhost:3000/"
+    }
   },
   mutations: {
-    increment (state) {
-      state.count++
+    increment(state) {
+      state.count++;
     }
   }
-})
+});
