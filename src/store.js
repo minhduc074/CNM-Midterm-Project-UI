@@ -32,10 +32,11 @@ export default new Vuex.Store({
       access_token: "",
       refresh_token: "",
       role: "",
+      staff_role: "",
       phone: ""
     },
     wepAPI: {
-      url: "https://arcane-wildwood-74745.herokuapp.com/"
+      url: "http://localhost:3000/"
     }
   },
   mutations: {

@@ -1,29 +1,28 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-
-
+import Vue from "vue";
+import Router from "vue-router";
 
 const routerOptions = [
-  { path: '/', component: 'Home' },
-  { path: '/login', component: 'Login' },
-  { path: '/signup', component: 'Signup' },
-  { path: '/user', component: 'User' },
-  { path: '/logout', component: 'Logout' },
-  { path: '/admin', component: 'Admin' },
-  { path: '/staffs', component: 'Staff' },
-  { path: '/driver', component: 'Driver' }
-]
+  { path: "/", component: "Home" },
+  { path: "/login", component: "Login" },
+  { path: "/signup", component: "Signup" },
+  { path: "/user", component: "User" },
+  { path: "/logout", component: "Logout" },
+  { path: "/admin", component: "Admin" },
+  { path: "/staffs/#Identifier", component: "StaffIdentifier" },
+  { path: "/staffs/#Receiver", component: "StaffReceiver" },
+  { path: "/driver", component: "Driver" }
+];
 
 const routes = routerOptions.map(route => {
   return {
     ...route,
     component: () => import(`@/components/${route.component}.vue`)
-  }
-})
+  };
+});
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
-  mode: 'history',
+  mode: "history",
   routes
-})
+});

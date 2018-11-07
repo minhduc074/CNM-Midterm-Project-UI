@@ -47,25 +47,30 @@
 export default {
   data() {
     return {
-      appTitle: "Midterm Project",
+      appTitle: "ABCXyZ",
       sidebar: false,
       menuItems: this.getMenu()
     };
   },
   methods: {
-    getMenu(){
+    getMenu() {
       var self = this;
       var menu = [];
 
-      menu.push({ title: "Home", path: "/" + self.$myStore.state.user.role, icon: "home"});
-      if(self.$myStore.state.user.username == "")
-      {
+      menu.push({
+        title: "Home",
+        path: "/" + self.$myStore.state.user.role,
+        icon: "home"
+      });
+      if (self.$myStore.state.user.username == "") {
         menu.push({ title: "Sign Up", path: "/signup", icon: "face" });
         menu.push({ title: "Sign In", path: "/Login", icon: "lock_open" });
-      }
-      else
-      {
-        menu.push({ title: self.$myStore.state.user.fullname, path: "/user", icon: "face" });
+      } else {
+        menu.push({
+          title: self.$myStore.state.user.fullname,
+          path: "/user",
+          icon: "face"
+        });
         menu.push({ title: "Logout", path: "/logout", icon: "lock_open" });
       }
       return menu;
@@ -82,11 +87,11 @@ export default {
     }
   },
   watch: {
-     username (newUsername, old_username) {
+    username(newUsername, old_username) {
       console.log(old_username + " => " + newUsername);
       this.menuItems = this.getMenu();
     },
-    fullname (newFullname, oldFullname) {
+    fullname(newFullname, oldFullname) {
       console.log(oldFullname + " => " + newFullname);
       this.menuItems = this.getMenu();
     }

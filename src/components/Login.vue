@@ -88,6 +88,8 @@ export default {
 
             if (self.user.role == "Driver") {
               self.$myStore.state.user.phone = res.data.phone;
+            } else {
+              self.$myStore.state.user.staff_role = res.data.role;
             }
             console.log(self.$myStore.state.user);
             self.$router.push("/" + role_url);

@@ -60,6 +60,13 @@
                 required
                 ></v-text-field>
             </v-flex>
+            <v-flex>
+              <select v-model="user.staff_role" v-if="user.role === 'Staff'">
+                <option disabled value="">Please select role</option>
+                <option>Request Receiver</option>
+                <option>Location Identifier</option>
+            </select>
+            </v-flex>
             <v-flex class="text-xs-center" mt-5>
               <v-btn color="primary" type="submit" @click="SignUp">Sign Up</v-btn>
             </v-flex>
@@ -79,7 +86,8 @@ export default {
         password: "",
         confirmPassword: "",
         role: "",
-        phone: ""
+        phone: "",
+        staff_role: ""
       }
     };
   },
@@ -106,6 +114,14 @@ export default {
       if (self.user.role == "Admin") role_url = "admin";
       else if (self.user.role == "Staff") {
         role_url = "staffs";
+        if (self.user.staff_role == "Request Receiver") {
+          data["role"] = 2;
+        } else if (self.user.staff_role == "Location Identifier") {
+          data["role"] = 3;
+        } else {
+          console.log("Staff Role error");
+          return;
+        }
       } else if (self.user.role == "Driver") {
         role_url = "driver";
         data["phone"] = self.user.phone;
