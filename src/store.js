@@ -35,7 +35,7 @@ export default new Vuex.Store({
       phone: ""
     },
     wepAPI: {
-      url: "http://localhost:3000/"
+      url: "https://arcane-wildwood-74745.herokuapp.com/"
     }
   },
   mutations: {
