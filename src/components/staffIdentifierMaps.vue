@@ -124,7 +124,7 @@ export default {
         });
       }).then(data => {
         console.log(data);
-        this.formatedAddresses = data;
+        self.new_address_str = data;
       });
     },
     getCustomerAddress: function() {
@@ -150,6 +150,7 @@ export default {
       var self = this;
       console.log(e.latLng);
       self.latLng = e.latLng;
+      reverse_geocoder();
     }
   }
 };

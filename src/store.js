@@ -37,7 +37,25 @@ export default new Vuex.Store({
     },
     wepAPI: {
       url: "http://localhost:3000/"
-    }
+    },
+    customer: [
+      {
+        id: 0,
+        fullname: "",
+        phone: "",
+        note: "",
+        status: 0,
+        staff: "",
+        driver: "",
+        address: {
+          latLng: null,
+          main_address:
+            "Công viên phần mềm Quang Trung, Tân Chánh Hiệp, District 12, Ho Chi Minh City, Vietnam",
+          geocoding_address: ""
+        }
+      }
+    ],
+    current_customer: 0
   },
   mutations: {
     increment(state) {

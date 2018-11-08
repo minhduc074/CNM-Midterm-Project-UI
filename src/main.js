@@ -10,8 +10,8 @@ import axios from "axios";
 import * as VueGoogleMaps from "vue2-google-maps";
 Vue.use(VueGoogleMaps, {
   load: {
-    key: "AIzaSyC5VG3FK-hoCVGFc4huhykoR5sLHvS3IcE",
-    libraries: "places" // necessary for places input
+    key: "AIzaSyAMn4lpHhrMrLICzyZrIWAKYeMKXEUkp6U",
+    libraries: "places, Geocoder" // necessary for places input
   }
 });
 
