@@ -1,156 +1,131 @@
 <template>
-  <div>
-    <div>
-      <v-flex>
-      <h3>
-        Customer addres: 
-        </h3>
-        <v-text-field v-model="address_str">
-        </v-text-field>
-      
-      </v-flex>
-      <br>
-      <label>
-        <h3>
-        Enter Customer addres: 
-        <gmap-autocomplete
-          @place_changed="setPlace">
-        </gmap-autocomplete>
-        </h3>
-        
-      </label>
-      <label>
-        <v-text-field v-model="new_address_str" placeholder="New Address">
-        </v-text-field>
-      </label>
-      <br/>
-
-    </div>
-    <br>
-    <gmap-map
-      :center="center"
-      :zoom="15"
-      style="width:100%;  height: 600px;"
-      @click="clicked"
-    >
-    <GmapMarker v-if="markers" :position="markers" label="C" :center="center"/>
-    <GmapMarker v-if="latLng" :position="latLng" label="N" :center="center"/>
-
-    </gmap-map>
-  </div>
+  <v-data-table
+    :headers="headers"
+    :items="items"
+    hide-actions
+    class="elevation-1"
+  >
+    <template slot="items" slot-scope="props">
+      <td>{{ props.item.name }}</td>
+      <td class="text-xs-right">{{ props.item.calories }}</td>
+      <td class="text-xs-right">{{ props.item.fat }}</td>
+      <td class="text-xs-right">{{ props.item.carbs }}</td>
+      <td class="text-xs-right">{{ props.item.protein }}</td>
+      <td class="text-xs-right">{{ props.item.iron }}</td>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
 export default {
-  name: "GoogleMap",
   data() {
     return {
-      // default to Montreal to keep it simple
-      // change this to whatever makes sense
-      center: { lat: 0, lng: 0 },
-      markers: null,
-      places: [],
-      currentPlace: null,
-      latLng: null,
-      address_str: "",
-      new_address_str: ""
-    };
-  },
-
-  mounted() {
-    this.getCustomerAddress();
-  },
-
-  methods: {
-    // receives a place object via the autocomplete component
-    setPlace(place) {
-      var self = this;
-      self.currentPlace = place;
-      self.addMarker();
-      self.geocoder();
-    },
-    addMarker() {
-      var self = this;
-      if (self.currentPlace) {
-        const marker = {
-          lat: self.currentPlace.geometry.location.lat(),
-          lng: self.currentPlace.geometry.location.lng()
-        };
-        self.markers = marker;
-        self.places.push(self.currentPlace);
-        self.center = marker;
-      }
-    },
-    geocoder() {
-      var self = this;
-      var geocoder = new google.maps.Geocoder();
-      var address = self.currentPlace.formatted_address;
-      console.log(self.currentPlace);
-
-      geocoder.geocode({ address: address }, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-          self.latLng = self.markers;
-          self.latLng.lat = results[0].geometry.location.lat();
-          self.latLng.lng = results[0].geometry.location.lng();
-
-          console.log(self.latLng);
-          // initialize(latitude,longitude);
+      headers: [
+        {
+          text: "Dessert (100g serving)",
+          align: "left",
+          sortable: false,
+          value: "name"
+        },
+        { text: "Calories", value: "calories" },
+        { text: "Fat (g)", value: "fat" },
+        { text: "Carbs (g)", value: "carbs" },
+        { text: "Protein (g)", value: "protein" },
+        { text: "Iron (%)", value: "iron" }
+      ],
+      items: [
+        {
+          value: false,
+          name: "Frozen Yogurt",
+          calories: 159,
+          fat: 6.0,
+          carbs: 24,
+          protein: 4.0,
+          iron: "1%"
+        },
+        {
+          value: false,
+          name: "Ice cream sandwich",
+          calories: 237,
+          fat: 9.0,
+          carbs: 37,
+          protein: 4.3,
+          iron: "1%"
+        },
+        {
+          value: false,
+          name: "Eclair",
+          calories: 262,
+          fat: 16.0,
+          carbs: 23,
+          protein: 6.0,
+          iron: "7%"
+        },
+        {
+          value: false,
+          name: "Cupcake",
+          calories: 305,
+          fat: 3.7,
+          carbs: 67,
+          protein: 4.3,
+          iron: "8%"
+        },
+        {
+          value: false,
+          name: "Gingerbread",
+          calories: 356,
+          fat: 16.0,
+          carbs: 49,
+          protein: 3.9,
+          iron: "16%"
+        },
+        {
+          value: false,
+          name: "Jelly bean",
+          calories: 375,
+          fat: 0.0,
+          carbs: 94,
+          protein: 0.0,
+          iron: "0%"
+        },
+        {
+          value: false,
+          name: "Lollipop",
+          calories: 392,
+          fat: 0.2,
+          carbs: 98,
+          protein: 0,
+          iron: "2%"
+        },
+        {
+          value: false,
+          name: "Honeycomb",
+          calories: 408,
+          fat: 3.2,
+          carbs: 87,
+          protein: 6.5,
+          iron: "45%"
+        },
+        {
+          value: false,
+          name: "Donut",
+          calories: 452,
+          fat: 25.0,
+          carbs: 51,
+          protein: 4.9,
+          iron: "22%"
+        },
+        {
+          value: false,
+          name: "KitKat",
+          calories: 518,
+          fat: 26.0,
+          carbs: 65,
+          protein: 7,
+          iron: "6%"
         }
-      });
-    },
-    reverse_geocoder() {
-      var self = this;
-
-      var geocoder = new google.maps.Geocoder();
-
-      var locationss = {
-        lat: parseFloat(addr.lat),
-        lng: parseFloat(addr.lng)
-      };
-
-      // var sampleLocation = { lat: 1.39, lng: 103.8 };
-
-      return new Promise(function(resolve, reject) {
-        geocoder.geocode({ location: locationss }, function(results, status) {
-          if (status === "OK") {
-            if (results[0]) {
-              return results[0].formatted_address;
-            } else {
-              console.log(status);
-              window.alert("No results found");
-              return null;
-            }
-          }
-        });
-      }).then(data => {
-        console.log(data);
-        this.formatedAddresses = data;
-      });
-    },
-    getCustomerAddress: function() {
-      var self = this;
-      /*
-      self.places = self.$myStore.state.main_address;
-      self.center = {
-        lat: self.$myStore.state.latLng.lat,
-        lng: self.$myStore.state.latLng.lng
-      };
-      */
-      self.address_str = self.$myStore.state.customer.main_address;
-      console.log(self.address_str);
-
-      navigator.geolocation.getCurrentPosition(position => {
-        self.center = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-      });
-    },
-    clicked(e) {
-      var self = this;
-      console.log(e.latLng);
-      self.latLng = e.latLng;
-    }
+      ]
+    };
   }
 };
 </script>
