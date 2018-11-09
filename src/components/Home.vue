@@ -9,7 +9,6 @@
         </v-text-field>
       
       </v-flex>
-      <br>
       <label>
         <h3>
         Enter Customer addres: 
@@ -26,10 +25,8 @@
       <v-flex class="text-xs-center" mt-5>
         <v-btn color="primary" type="submit" @click="Save">Save</v-btn>
       </v-flex>
-      <br/>
 
     </div>
-    <br>
     <gmap-map
       :center="center"
       :zoom="15"
@@ -57,7 +54,7 @@ export default {
       latLng: null,
       address_str: "",
       new_address_str: "",
-      index_customer: self.$myStore.state.customer.current_customer
+      index_customer: this.$myStore.state.current_customer
     };
   },
 
@@ -141,8 +138,11 @@ export default {
         lng: self.$myStore.state.latLng.lng
       };
       */
+      console.log(this.$myStore.state.current_customer);
       self.address_str =
-        self.$myStore.state.customer[self.index_customer].main_address;
+        self.$myStore.state.customer[self.index_customer].address.main_address;
+
+      console.log(self.$myStore.state.customer);
       console.log(self.address_str);
 
       navigator.geolocation.getCurrentPosition(position => {

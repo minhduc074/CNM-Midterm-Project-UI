@@ -9,7 +9,6 @@
         </v-text-field>
       
       </v-flex>
-      <br>
       <label>
         <h3>
         Enter Customer addres: 
@@ -23,10 +22,11 @@
         <v-text-field v-model="new_address_str" placeholder="New Address">
         </v-text-field>
       </label>
-      <br/>
+      <v-flex class="text-xs-center" mt-5>
+        <v-btn color="primary" type="submit" @click="Save">Save</v-btn>
+      </v-flex>
 
     </div>
-    <br>
     <gmap-map
       :center="center"
       :zoom="15"
@@ -53,7 +53,8 @@ export default {
       currentPlace: null,
       latLng: null,
       address_str: "",
-      new_address_str: ""
+      new_address_str: "",
+      index_customer: this.$myStore.state.current_customer
     };
   },
 
@@ -104,27 +105,28 @@ export default {
       var geocoder = new google.maps.Geocoder();
 
       var locationss = {
-        lat: parseFloat(addr.lat),
-        lng: parseFloat(addr.lng)
+        lat: self.latLng.lat(),
+        lng: self.latLng.lng()
       };
 
+      console.log(locationss);
       // var sampleLocation = { lat: 1.39, lng: 103.8 };
-
-      return new Promise(function(resolve, reject) {
-        geocoder.geocode({ location: locationss }, function(results, status) {
-          if (status === "OK") {
-            if (results[0]) {
-              return results[0].formatted_address;
-            } else {
-              console.log(status);
-              window.alert("No results found");
-              return null;
-            }
+      geocoder.geocode({ location: locationss }, function(results, status) {
+        console.log(results[0]);
+        if (status === "OK") {
+          if (results[0]) {
+            console.log(status);
+            console.log(results[0].formatted_address);
+            self.new_address_str = results[0].formatted_address;
+            self.$myStore.state.customer[
+              self.index_customer
+            ].geocoding_address = self.new_address_str;
+          } else {
+            console.log(status);
+            window.alert("No results found");
+            return null;
           }
-        });
-      }).then(data => {
-        console.log(data);
-        self.new_address_str = data;
+        }
       });
     },
     getCustomerAddress: function() {
@@ -136,7 +138,11 @@ export default {
         lng: self.$myStore.state.latLng.lng
       };
       */
-      self.address_str = self.$myStore.state.customer.main_address;
+      console.log(this.$myStore.state.current_customer);
+      self.address_str =
+        self.$myStore.state.customer[self.index_customer].address.main_address;
+
+      console.log(self.$myStore.state.customer);
       console.log(self.address_str);
 
       navigator.geolocation.getCurrentPosition(position => {
@@ -150,7 +156,111 @@ export default {
       var self = this;
       console.log(e.latLng);
       self.latLng = e.latLng;
-      reverse_geocoder();
+      self.reverse_geocoder();
+    },
+    Save() {
+      var self = this;
+      self.UpdateAddress();
+      self.UpdateStatus();
+    },
+    UpdateAddress() {
+      const self = this;
+      const data = {
+        address:
+          self.$myStore.state.customer[self.index_customer].geocoding_address,
+        id: self.$myStore.state.customer.current_customer
+      };
+      // checking if the input is valid
+      //if (this.$refs.form.validate()) {
+
+      var role_url = "";
+      console.log("role: " + self.user.role);
+
+      if (self.user.role == "Admin") role_url = "admin";
+      else if (self.user.role == "Staff") {
+        role_url = "staffs";
+      } else if (self.user.role == "Driver") {
+        role_url = "driver";
+      } else {
+        console.log("Role error");
+        return;
+      }
+
+      if (self.username != "" && self.password != "") {
+        self.loading = true;
+        self.$axios
+          .post(self.$myStore.state.wepAPI.url + role_url + "/address/", data)
+          .then(res => {
+            console.log(res.data);
+            self.$myStore.state.user.username = res.data.username;
+            self.$myStore.state.user.password = self.user.password;
+            self.$myStore.state.user.fullname = res.data.fullname;
+            self.$myStore.state.user.access_token = res.data.access_token;
+            self.$myStore.state.user.refresh_token = res.data.refresh_token;
+            self.$myStore.state.user.role = role_url;
+
+            if (self.user.role == "Driver") {
+              self.$myStore.state.user.phone = res.data.phone;
+            } else {
+              self.$myStore.state.user.staff_role = res.data.role;
+            }
+            console.log(self.$myStore.state.user);
+            self.$router.push("/" + role_url);
+          })
+          .catch(e => {
+            self.loading = false;
+            console.log(e);
+          });
+      }
+    },
+    UpdateStatus() {
+      const self = this;
+      const data = {
+        username: self.user.username,
+        password: self.user.password
+      };
+      // checking if the input is valid
+      //if (this.$refs.form.validate()) {
+
+      var role_url = "";
+      console.log("role: " + self.user.role);
+
+      if (self.user.role == "Admin") role_url = "admin";
+      else if (self.user.role == "Staff") {
+        role_url = "staffs";
+      } else if (self.user.role == "Driver") {
+        role_url = "driver";
+      } else {
+        console.log("Role error");
+        return;
+      }
+
+      if (self.username != "" && self.password != "") {
+        self.loading = true;
+        self.$axios
+          .post(self.$myStore.state.wepAPI.url + role_url + "/login/", data)
+          .then(res => {
+            console.log(res.data);
+            self.$myStore.state.user.username = res.data.username;
+            self.$myStore.state.user.password = self.user.password;
+            self.$myStore.state.user.fullname = res.data.fullname;
+            self.$myStore.state.user.access_token = res.data.access_token;
+            self.$myStore.state.user.refresh_token = res.data.refresh_token;
+            self.$myStore.state.user.role = role_url;
+
+            if (self.user.role == "Driver") {
+              self.$myStore.state.user.phone = res.data.phone;
+            } else {
+              self.$myStore.state.user.staff_role = res.data.role;
+            }
+            console.log(self.$myStore.state.user);
+            self.$router.push("/" + role_url);
+          })
+          .catch(e => {
+            self.loading = false;
+            console.log(e);
+          });
+      }
     }
   }
 };
