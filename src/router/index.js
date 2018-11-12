@@ -9,7 +9,8 @@ const routerOptions = [
   { path: "/logout", component: "Logout" },
   { path: "/admin", component: "Admin" },
   { path: "/staffs/Identifier", component: "StaffIdentifier" },
-  { path: "/staffs/#Receiver", component: "StaffReceiver" },
+  { path: "/staffs/Identifier/maps", component: "StaffIdentifierMaps" },
+  { path: "/staffs/Receiver", component: "StaffReceiver" },
   { path: "/driver", component: "Driver" }
 ];
 

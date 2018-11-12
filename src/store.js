@@ -25,6 +25,32 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     count: 0,
+    customer_status: [
+      {
+        id: 0,
+        text: "New"
+      },
+      {
+        id: 1,
+        text: "Identifying"
+      },
+      {
+        id: 2,
+        text: "Identified"
+      },
+      {
+        id: 3,
+        text: "Finding Driver"
+      },
+      {
+        id: 4,
+        text: "Assigned to Driver"
+      },
+      {
+        id: 5,
+        text: "done"
+      }
+    ],
     user: {
       username: "",
       password: "",

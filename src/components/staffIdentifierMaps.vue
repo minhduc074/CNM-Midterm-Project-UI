@@ -54,7 +54,7 @@ export default {
       latLng: null,
       address_str: "",
       new_address_str: "",
-      index_customer: this.$myStore.state.current_customer
+      index_customer: this.getIndexCustomer()
     };
   },
 
@@ -160,52 +160,25 @@ export default {
     },
     Save() {
       var self = this;
-      self.UpdateAddress();
-      self.UpdateStatus();
+      //self.UpdateAddress();
+      self.UpdateStatus(2);
     },
     UpdateAddress() {
       const self = this;
       const data = {
         address:
           self.$myStore.state.customer[self.index_customer].geocoding_address,
-        id: self.$myStore.state.customer.current_customer
+        id: self.index_customer
       };
       // checking if the input is valid
       //if (this.$refs.form.validate()) {
 
-      var role_url = "";
-      console.log("role: " + self.user.role);
-
-      if (self.user.role == "Admin") role_url = "admin";
-      else if (self.user.role == "Staff") {
-        role_url = "staffs";
-      } else if (self.user.role == "Driver") {
-        role_url = "driver";
-      } else {
-        console.log("Role error");
-        return;
-      }
-
       if (self.username != "" && self.password != "") {
         self.loading = true;
         self.$axios
-          .post(self.$myStore.state.wepAPI.url + role_url + "/address/", data)
+          .post(self.$myStore.state.wepAPI.url + "customer/address/", data)
           .then(res => {
             console.log(res.data);
-            self.$myStore.state.user.username = res.data.username;
-            self.$myStore.state.user.password = self.user.password;
-            self.$myStore.state.user.fullname = res.data.fullname;
-            self.$myStore.state.user.access_token = res.data.access_token;
-            self.$myStore.state.user.refresh_token = res.data.refresh_token;
-            self.$myStore.state.user.role = role_url;
-
-            if (self.user.role == "Driver") {
-              self.$myStore.state.user.phone = res.data.phone;
-            } else {
-              self.$myStore.state.user.staff_role = res.data.role;
-            }
-            console.log(self.$myStore.state.user);
-            self.$router.push("/" + role_url);
           })
           .catch(e => {
             self.loading = false;
@@ -213,54 +186,40 @@ export default {
           });
       }
     },
-    UpdateStatus() {
+    UpdateStatus(status) {
       const self = this;
       const data = {
-        username: self.user.username,
-        password: self.user.password
+        status: status,
+        id: self.index_customer
       };
       // checking if the input is valid
       //if (this.$refs.form.validate()) {
 
-      var role_url = "";
-      console.log("role: " + self.user.role);
-
-      if (self.user.role == "Admin") role_url = "admin";
-      else if (self.user.role == "Staff") {
-        role_url = "staffs";
-      } else if (self.user.role == "Driver") {
-        role_url = "driver";
-      } else {
-        console.log("Role error");
-        return;
-      }
-
       if (self.username != "" && self.password != "") {
         self.loading = true;
         self.$axios
-          .post(self.$myStore.state.wepAPI.url + role_url + "/login/", data)
+          .post(self.$myStore.state.wepAPI.url + "customer/status/", data)
           .then(res => {
             console.log(res.data);
-            self.$myStore.state.user.username = res.data.username;
-            self.$myStore.state.user.password = self.user.password;
-            self.$myStore.state.user.fullname = res.data.fullname;
-            self.$myStore.state.user.access_token = res.data.access_token;
-            self.$myStore.state.user.refresh_token = res.data.refresh_token;
-            self.$myStore.state.user.role = role_url;
-
-            if (self.user.role == "Driver") {
-              self.$myStore.state.user.phone = res.data.phone;
-            } else {
-              self.$myStore.state.user.staff_role = res.data.role;
-            }
-            console.log(self.$myStore.state.user);
-            self.$router.push("/" + role_url);
           })
           .catch(e => {
             self.loading = false;
             console.log(e);
           });
       }
+    },
+    getIndexCustomer() {
+      var self = this;
+      var ret = 0;
+
+      for (var i = 0; i < self.$myStore.state.customer.size; i++) {
+        if (
+          self.$myStore.state.customer[i].id == $myStore.state.current_customer
+        )
+          ret = i;
+      }
+      console.log("getIndexCustomer: " + ret);
+      return ret;
     }
   }
 };
