@@ -90,9 +90,18 @@ export default {
               self.$myStore.state.user.phone = res.data.phone;
             } else {
               self.$myStore.state.user.staff_role = res.data.role;
+              if (res.data.role == 0) {
+                self.$myStore.state.user.staff_role = "admin";
+              } else if (res.data.role == 1) {
+                self.$myStore.state.user.staff_role = "identifier";
+              } else if (res.data.role == 2) {
+                self.$myStore.state.user.staff_role = "receiver";
+              }
             }
             console.log(self.$myStore.state.user);
-            self.$router.push("/" + role_url);
+            self.$router.push(
+              "/" + role_url + "/" + self.$myStore.state.user.staff_role
+            );
           })
           .catch(e => {
             self.loading = false;

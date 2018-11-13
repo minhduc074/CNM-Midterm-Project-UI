@@ -160,8 +160,10 @@ export default {
     },
     Save() {
       var self = this;
-      //self.UpdateAddress();
+      self.UpdateAddress();
       self.UpdateStatus(2);
+
+      self.$router.push("/staffs/Identifier/");
     },
     UpdateAddress() {
       const self = this;
@@ -172,7 +174,7 @@ export default {
       };
       // checking if the input is valid
       //if (this.$refs.form.validate()) {
-
+      /*
       if (self.username != "" && self.password != "") {
         self.loading = true;
         self.$axios
@@ -185,12 +187,13 @@ export default {
             console.log(e);
           });
       }
+      */
     },
     UpdateStatus(status) {
       const self = this;
       const data = {
         status: status,
-        id: self.index_customer
+        id: self.$myStore.state.current_customer
       };
       // checking if the input is valid
       //if (this.$refs.form.validate()) {
@@ -212,13 +215,19 @@ export default {
       var self = this;
       var ret = 0;
 
-      for (var i = 0; i < self.$myStore.state.customer.size; i++) {
+      console.log(
+        "Current customer ID: " + self.$myStore.state.current_customer
+      );
+      console.log("customer count: " + self.$myStore.state.customer.length);
+
+      for (var i = 0; i < self.$myStore.state.customer.length; i++) {
         if (
-          self.$myStore.state.customer[i].id == $myStore.state.current_customer
+          self.$myStore.state.customer[i].id ==
+          self.$myStore.state.current_customer
         )
           ret = i;
       }
-      console.log("getIndexCustomer: " + ret);
+      console.log("getIndexCustomer returned: " + ret);
       return ret;
     }
   }

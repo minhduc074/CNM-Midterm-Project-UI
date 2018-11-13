@@ -28,7 +28,12 @@
                   <v-text-field v-model="editedItem.note" label="note"></v-text-field>
                 </v-flex>
                  <v-flex>
-                  <v-text-field v-model="editedItem.address" label="address"></v-text-field>
+                  <v-text-field v-model="editedItem.address.main_address" label="address"></v-text-field>
+                </v-flex>
+                <v-flex>
+                  <gmap-autocomplete
+                  @place_changed="setAddress">
+                </gmap-autocomplete>
                 </v-flex>
               </v-layout>
               
@@ -131,16 +136,28 @@ export default {
       fullname: "",
       phone: "",
       note: "",
-      address:
-        "Công viên phần mềm Quang Trung, Tân Chánh Hiệp, District 12, Ho Chi Minh City, Vietnam"
+      address: {
+        latLng: null,
+        main_address: "",
+        geocoding_address: ""
+      },
+      status: "New",
+      staff: "",
+      driver: ""
     },
     defaultItem: {
       id: 0,
       fullname: "",
       phone: "",
       note: "",
-      address:
-        "Công viên phần mềm Quang Trung, Tân Chánh Hiệp, District 12, Ho Chi Minh City, Vietnam"
+      address: {
+        latLng: null,
+        main_address: "",
+        geocoding_address: ""
+      },
+      status: "New",
+      staff: "",
+      driver: ""
     }
   }),
 
@@ -217,9 +234,9 @@ export default {
     },
 
     deleteItem(item) {
-      const index = this.desserts.indexOf(item);
+      const index = this.customer.items.indexOf(item);
       confirm("Are you sure you want to delete this item?") &&
-        this.desserts.splice(index, 1);
+        this.customer.items.splice(index, 1);
     },
 
     close() {
@@ -231,12 +248,44 @@ export default {
     },
 
     save() {
+      var self = this;
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+        Object.assign(this.customer.items[this.editedIndex], this.editedItem);
       } else {
-        this.desserts.push(this.editedItem);
+        this.customer.items.push(this.editedItem);
+
+        var data = {
+          id: self.editedItem.id,
+          fullname: self.editedItem.fullname,
+          phone: self.editedItem.phone,
+          note: self.editedItem.note,
+          status: 0,
+          staff: self.editedItem.staff,
+          driver: self.editedItem.driver,
+          address: self.editedItem.address.main_address
+        };
+
+        console.log(data);
+
+        self.loading = true;
+        self.$axios
+          .put(self.$myStore.state.wepAPI.url + "customer/", data)
+          .then(res => {
+            console.log(res.data);
+          })
+          .catch(e => {
+            self.loading = false;
+            console.log(e);
+          });
       }
       this.close();
+    },
+    setAddress(place) {
+      var self = this;
+      self.editedItem.address.main_address = place.formatted_address;
+      console.log(
+        "address was set to: " + self.editedItem.address.main_address
+      );
     }
   }
 };

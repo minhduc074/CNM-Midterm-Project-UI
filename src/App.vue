@@ -59,7 +59,11 @@ export default {
 
       menu.push({
         title: "Home",
-        path: "/" + self.$myStore.state.user.role,
+        path:
+          "/" +
+          self.$myStore.state.user.role +
+          "/" +
+          self.$myStore.state.user.staff_role,
         icon: "home"
       });
       if (self.$myStore.state.user.username == "") {
@@ -84,6 +88,10 @@ export default {
     fullname() {
       var self = this;
       return self.$myStore.state.user.fullname;
+    },
+    staff_role() {
+      var self = this;
+      return self.$myStore.state.user.staff_role;
     }
   },
   watch: {
@@ -93,6 +101,11 @@ export default {
     },
     fullname(newFullname, oldFullname) {
       console.log(oldFullname + " => " + newFullname);
+      this.menuItems = this.getMenu();
+    },
+    staff_role(newstaff_role, oldstaff_role) {
+      console.log(oldstaff_role + " => " + newstaff_role);
+
       this.menuItems = this.getMenu();
     }
   }

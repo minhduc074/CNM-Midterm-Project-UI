@@ -117,7 +117,7 @@ export default {
         if (self.user.staff_role == "Request Receiver") {
           data["role"] = 2;
         } else if (self.user.staff_role == "Location Identifier") {
-          data["role"] = 3;
+          data["role"] = 1;
         } else {
           console.log("Staff Role error");
           return;

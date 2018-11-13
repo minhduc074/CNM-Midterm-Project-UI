@@ -150,6 +150,7 @@ export default {
       console.log(item);
       self.$myStore.state.current_customer = item.id;
       self.update_staff(item);
+      self.update_status(item, 1);
       self.$router.push("/staffs/Identifier/maps");
     },
     customer_status_id2str(id) {
@@ -172,6 +173,21 @@ export default {
       self.loading = true;
       self.$axios
         .post(self.$myStore.state.wepAPI.url + "customer/staff", data)
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(e => {
+          self.loading = false;
+          console.log(e);
+        });
+    },
+    update_status(customer, status) {
+      var self = this;
+      var data = { id: customer.id, status: status };
+
+      self.loading = true;
+      self.$axios
+        .post(self.$myStore.state.wepAPI.url + "customer/status", data)
         .then(res => {
           console.log(res.data);
         })

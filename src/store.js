@@ -48,7 +48,25 @@ export default new Vuex.Store({
       },
       {
         id: 5,
-        text: "done"
+        text: "Done"
+      },
+      {
+        id: 6,
+        text: "Cancel"
+      }
+    ],
+    staff_role: [
+      {
+        id: 0,
+        text: "admin"
+      },
+      {
+        id: 1,
+        text: "identifier"
+      },
+      {
+        id: 2,
+        text: "receiver"
       }
     ],
     user: {
