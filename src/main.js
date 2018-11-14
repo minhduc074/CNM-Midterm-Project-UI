@@ -7,6 +7,9 @@ import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
 import axios from "axios";
 
+//import VueWebsocket from "vue-websocket";
+//Vue.use(VueWebsocket, "ws://localhost:3000");
+
 import * as VueGoogleMaps from "vue2-google-maps";
 Vue.use(VueGoogleMaps, {
   load: {

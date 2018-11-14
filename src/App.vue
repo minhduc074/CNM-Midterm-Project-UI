@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import Socket from "./socket";
 export default {
   data() {
     return {

@@ -168,13 +168,15 @@ export default {
     UpdateAddress() {
       const self = this;
       const data = {
-        address:
-          self.$myStore.state.customer[self.index_customer].geocoding_address,
+        address: JSON.stringify(self.latLng),
+        lat: self.latLng.lat(),
+        lng: self.latLng.lng(),
         id: self.index_customer
       };
       // checking if the input is valid
       //if (this.$refs.form.validate()) {
-      /*
+
+      console.log(data);
       if (self.username != "" && self.password != "") {
         self.loading = true;
         self.$axios
@@ -187,7 +189,6 @@ export default {
             console.log(e);
           });
       }
-      */
     },
     UpdateStatus(status) {
       const self = this;
