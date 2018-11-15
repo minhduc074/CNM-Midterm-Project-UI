@@ -22,6 +22,31 @@
       <v-flex class="text-xs-center" mt-5>
         <v-btn color="primary" type="submit" @click="Save">Save</v-btn>
       </v-flex>
+      <v-dialog v-model="dialog" max-width="50%">
+        <v-btn slot="activator" color="primary" >New Customer</v-btn>
+        <v-card>
+          <v-card-title>
+            <span class="headline">New Customer</span>
+          </v-card-title>
+
+          <v-card-text>
+            <v-container grid-list-md>
+              <v-layout column>
+                <v-flex>
+                  1234
+                </v-flex>
+              </v-layout>
+              
+            </v-container>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
+            <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
     </div>
     <gmap-map
@@ -51,7 +76,8 @@ export default {
       latLng: null,
       address_str: "",
       new_address_str: "",
-      index_customer: this.getIndexCustomer()
+      index_customer: this.getIndexCustomer(),
+      dialog: null,
     };
   },
 
@@ -173,7 +199,7 @@ export default {
         lng: self.latLng.lng()
       };
       self.reverse_geocoder(location);
-      UpdateAddress();
+      self.UpdateAddress();
     },
     Save() {
       var self = this;
@@ -181,11 +207,15 @@ export default {
       //self.UpdateCustomerStatus(2);
     },
     UpdateAddress() {
+      console.log("UpdateAddress");
       const self = this;
       const data = {
-        address: new_address_str,
+        address: self.new_address_str,
         geocoding_address: JSON.stringify(self.latLng),
-        username: self.$myStore.state.user.username
+        username: "driver1",
+        //username: self.$myStore.state.user.username
+        lat: self.latLng.lat(),
+        lng: self.latLng.lng()
       };
       // checking if the input is valid
       //if (this.$refs.form.validate()) {
@@ -245,6 +275,8 @@ export default {
       console.log("getIndexCustomer returned: " + ret);
       return ret;
     }
-  }
+  }, 
+  computed: {
+  },
 };
 </script>
