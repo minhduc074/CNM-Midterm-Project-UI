@@ -25,8 +25,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     count: 0,
-    customer_status: [
-      {
+    customer_status: [{
         id: 0,
         text: "New"
       },
@@ -55,8 +54,7 @@ export default new Vuex.Store({
         text: "Cancel"
       }
     ],
-    staff_role: [
-      {
+    staff_role: [{
         id: 0,
         text: "admin"
       },
@@ -82,24 +80,36 @@ export default new Vuex.Store({
     wepAPI: {
       url: "http://localhost:3000/"
     },
-    customer: [
-      {
-        id: 0,
-        fullname: "",
-        phone: "",
-        note: "",
-        status: 0,
-        staff: "",
-        driver: "",
-        address: {
-          latLng: null,
-          main_address:
-            "Công viên phần mềm Quang Trung, Tân Chánh Hiệp, District 12, Ho Chi Minh City, Vietnam",
-          geocoding_address: ""
-        }
+    customer: [{
+      id: 0,
+      fullname: "",
+      phone: "",
+      note: "",
+      status: 0,
+      staff: "",
+      driver: "",
+      address: {
+        latLng: null,
+        main_address: "Công viên phần mềm Quang Trung, Tân Chánh Hiệp, District 12, Ho Chi Minh City, Vietnam",
+        geocoding_address: ""
       }
-    ],
-    current_customer: 0
+    }],
+    current_customer: 0,
+    customer_update_count: 0,
+    driver_customer: {
+      id: 0,
+      fullname: "",
+      phone: "",
+      note: "",
+      status: 0,
+      staff: "",
+      driver: "",
+      address: {
+        latLng: null,
+        main_address: "Công viên phần mềm Quang Trung, Tân Chánh Hiệp, District 12, Ho Chi Minh City, Vietnam",
+        geocoding_address: ""
+      }
+    }
   },
   mutations: {
     increment(state) {

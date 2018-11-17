@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-toolbar flat color="white">
-      <v-toolbar-title>My CRUD</v-toolbar-title>
+      <v-toolbar-title>Staff Receiver</v-toolbar-title>
       <v-divider
         class="mx-2"
         inset
@@ -12,7 +12,7 @@
         <v-btn slot="activator" color="primary" >New Customer</v-btn>
         <v-card>
           <v-card-title>
-            <span class="headline">{{ formTitle }}</span>
+            <span class="headline">New Customer</span>
           </v-card-title>
 
           <v-card-text>
@@ -287,6 +287,20 @@ export default {
         "address was set to: " + self.editedItem.address.main_address
       );
     }
+  },
+  watch: {
+    customer_update(new_customer, old_customer) {
+      console.log(old_customer + " => " + new_customer);
+      
+      this.getAllCustomer();
+      
+    }
+  },
+  computed: {
+    customer_update() {
+      var self = this;
+      return self.$myStore.state.customer_update_count;
+    },
   }
 };
 </script>

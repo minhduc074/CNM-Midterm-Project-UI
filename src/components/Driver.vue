@@ -33,7 +33,16 @@
             <v-container grid-list-md>
               <v-layout column>
                 <v-flex>
-                  1234
+                  <v-text-field v-model="this.$myStore.state.driver_customer.fullname" label="fullname"></v-text-field>
+                </v-flex>
+                <v-flex>
+                  <v-text-field v-model="this.$myStore.state.driver_customer.phone" label="phone"></v-text-field>
+                </v-flex>
+                <v-flex>
+                  <v-text-field v-model="this.$myStore.state.driver_customer.note" label="note"></v-text-field>
+                </v-flex>
+                 <v-flex>
+                  <v-text-field v-model="this.$myStore.state.driver_customer.address" label="address"></v-text-field>
                 </v-flex>
               </v-layout>
               
@@ -43,7 +52,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
+            <v-btn color="blue darken-1" flat @click.native="Accept">Accept</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -76,8 +85,7 @@ export default {
       latLng: null,
       address_str: "",
       new_address_str: "",
-      index_customer: this.getIndexCustomer(),
-      dialog: null,
+      dialog: null
     };
   },
 
@@ -139,9 +147,7 @@ export default {
             console.log(status);
             console.log(results[0].formatted_address);
             self.new_address_str = results[0].formatted_address;
-            self.$myStore.state.customer[
-              self.index_customer
-            ].geocoding_address = self.new_address_str;
+            self.$myStore.state.driver_customer.geocoding_address = self.new_address_str;
           } else {
             console.log(status);
             window.alert("No results found");
@@ -160,21 +166,13 @@ export default {
         lng: self.$myStore.state.latLng.lng
       };
       */
-      console.log(this.$myStore.state.current_customer);
+      console.log(self.$myStore.state.driver_customer);
       self.address_str =
-        self.$myStore.state.customer[self.index_customer].address.main_address;
+        self.$myStore.state.driver_customer.address;
 
-      console.log(self.$myStore.state.customer);
       console.log(self.address_str);
 
-      navigator.geolocation.getCurrentPosition(position => {
-        console.log(self.markers);
-        self.center = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-        self.markers = self.center;
-      });
+        self.markers = JSON.parse(self.$myStore.state.driver_customer.geocoding);
     },
     getDriverAddress() {
       var self = this;
@@ -256,27 +254,50 @@ export default {
           });
       }
     },
-    getIndexCustomer() {
+    UpdateCustomerFromServer() {
       var self = this;
-      var ret = 0;
+      self.address_str = self.$myStore.state.driver_customer.address;
+      console.log("UpdateCustomerFromServer: " );
+      console.log(self.$myStore.state.driver_customer);
+    self.getCustomerAddress()
 
-      console.log(
-        "Current customer ID: " + self.$myStore.state.current_customer
-      );
-      console.log("customer count: " + self.$myStore.state.customer.length);
+    },
 
-      for (var i = 0; i < self.$myStore.state.customer.length; i++) {
-        if (
-          self.$myStore.state.customer[i].id ==
-          self.$myStore.state.current_customer
-        )
-          ret = i;
-      }
-      console.log("getIndexCustomer returned: " + ret);
-      return ret;
-    }
-  }, 
-  computed: {
+    close() {
+      self.$myStore.state.driver_customer = {};
+      this.dialog = false;
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      }, 300);
+    },
+    Accept() {
+      this.UpdateCustomerFromServer();
+      this.dialog = false;
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      }, 300);
+    },
   },
+  computed: {},
+
+  watch: {
+    customer(new_customer, old_customer) {
+      console.log(old_customer + " => " + new_customer);
+      if(new_customer != {})
+      {
+        this.dialog = true;
+      }
+      
+      
+    }
+  },
+  computed: {
+    customer() {
+      var self = this;
+      return self.$myStore.state.driver_customer;
+    },
+  }
 };
 </script>
