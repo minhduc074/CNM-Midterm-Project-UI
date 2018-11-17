@@ -112,11 +112,11 @@ export default {
     getAllCustomer() {
       var self = this;
       let config = {
-          headers: {
-            "x-access-token": self.$myStore.state.user.access_token,
-          }
+        headers: {
+          "x-access-token": self.$myStore.state.user.access_token
         }
-        console.log(config);
+      };
+      console.log(config);
       self.loading = true;
       self.$axios
         .get(self.$myStore.state.wepAPI.url + "customer/", config)
@@ -149,6 +149,8 @@ export default {
         .catch(e => {
           self.loading = false;
           console.log(e);
+          if(e.response.status == 401 || e.response.status == 403)
+              self.silence_login();
         });
     },
     editItem(item) {
@@ -176,11 +178,11 @@ export default {
       var self = this;
       var data = { id: customer.id, staff: self.$myStore.state.user.username };
       let config = {
-          headers: {
-            "x-access-token": self.$myStore.state.user.access_token,
-          }
+        headers: {
+          "x-access-token": self.$myStore.state.user.access_token
         }
-        console.log(config);
+      };
+      console.log(config);
 
       self.loading = true;
       self.$axios
@@ -191,17 +193,19 @@ export default {
         .catch(e => {
           self.loading = false;
           console.log(e);
+          if(e.response.status == 401 || e.response.status == 403)
+              self.silence_login();
         });
     },
     update_status(customer, status) {
       var self = this;
       var data = { id: customer.id, status: status };
       let config = {
-          headers: {
-            "x-access-token": self.$myStore.state.user.access_token,
-          }
+        headers: {
+          "x-access-token": self.$myStore.state.user.access_token
         }
-        console.log(config);
+      };
+      console.log(config);
 
       self.loading = true;
       self.$axios
@@ -212,7 +216,40 @@ export default {
         .catch(e => {
           self.loading = false;
           console.log(e);
+          if(e.response.status == 401 || e.response.status == 403)
+              self.silence_login();
         });
+    },
+    silence_login() {
+      var self = this;
+      const data = {
+        username: self.$myStore.state.user.username,
+        password: self.$myStore.state.user.password
+      };
+      console.log("silence_login");
+      var role_url = self.$myStore.state.user.role;
+      if (
+        self.$myStore.state.user.username != "" &&
+        self.$myStore.state.user.password != ""
+      ) {
+        self.loading = true;
+        self.$axios
+          .post(self.$myStore.state.wepAPI.url + role_url + "/login/", data)
+          .then(res => {
+            console.log(res.data);
+            self.$myStore.state.user.username = res.data.username;
+            self.$myStore.state.user.password = self.user.password;
+            self.$myStore.state.user.fullname = res.data.fullname;
+            self.$myStore.state.user.access_token = res.data.access_token;
+            self.$myStore.state.user.refresh_token = res.data.refresh_token;
+            self.$myStore.state.user.role = role_url;
+
+          })
+          .catch(e => {
+            self.loading = false;
+            console.log(e);
+          });
+      }
     }
   }
 };

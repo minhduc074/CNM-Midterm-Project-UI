@@ -149,7 +149,36 @@ export default {
         .catch(e => {
           self.loading = false;
           console.log(e);
+          if(e.response.status == 401 || e.response.status == 403)
+              self.silence_login();
         });
+    },
+    silence_login() {
+      var self = this;
+      const data = {
+        username: self.$myStore.state.user.username,
+        password: self.$myStore.state.user.password
+      };
+      console.log("silence_login");
+      var role_url = self.$myStore.state.user.role;
+      if (
+        self.$myStore.state.user.username != "" &&
+        self.$myStore.state.user.password != ""
+      ) {
+        self.loading = true;
+        self.$axios
+          .post(self.$myStore.state.wepAPI.url + role_url + "/login/", data)
+          .then(res => {
+            console.log(res.data);
+            self.$myStore.state.user.fullname = res.data.fullname;
+            self.$myStore.state.user.access_token = res.data.access_token;
+            self.$myStore.state.user.refresh_token = res.data.refresh_token;
+          })
+          .catch(e => {
+            self.loading = false;
+            console.log(e);
+          });
+      }
     }
   }
 };

@@ -47,10 +47,14 @@ export default new Vuex.Store({
       },
       {
         id: 5,
-        text: "Done"
+        text: "Driving"
       },
       {
         id: 6,
+        text: "Done"
+      },
+      {
+        id: 7,
         text: "Cancel"
       }
     ],

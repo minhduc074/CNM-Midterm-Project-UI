@@ -181,12 +181,12 @@ export default {
     getAllCustomer() {
       var self = this;
       let config = {
-          headers: {
-            "x-access-token": self.$myStore.state.user.access_token,
-          }
+        headers: {
+          "x-access-token": self.$myStore.state.user.access_token
         }
-        console.log(config);
-      
+      };
+      console.log(config);
+
       self.loading = true;
       self.$axios
         .get(self.$myStore.state.wepAPI.url + "customer/", config)
@@ -215,6 +215,8 @@ export default {
         .catch(e => {
           self.loading = false;
           console.log(e);
+          if(e.response.status == 401 || e.response.status == 403)
+              self.silence_login();
         });
     },
     showAlert() {
@@ -274,12 +276,11 @@ export default {
 
         console.log(data);
 
-
         let config = {
           headers: {
-            "x-access-token": self.$myStore.state.user.access_token,
+            "x-access-token": self.$myStore.state.user.access_token
           }
-        }
+        };
         console.log(config);
         self.loading = true;
         self.$axios
@@ -290,6 +291,8 @@ export default {
           .catch(e => {
             self.loading = false;
             console.log(e);
+            if(e.response.status == 401 || e.response.status == 403)
+              self.silence_login();
           });
       }
       this.close();
@@ -300,21 +303,64 @@ export default {
       console.log(
         "address was set to: " + self.editedItem.address.main_address
       );
+    },
+    silence_login() {
+      var self = this;
+      const data = {
+        username: self.$myStore.state.user.username,
+        password: self.$myStore.state.user.password
+      };
+      console.log("silence_login");
+      var role_url = self.$myStore.state.user.role;
+      if (
+        self.$myStore.state.user.username != "" &&
+        self.$myStore.state.user.password != ""
+      ) {
+        self.loading = true;
+        self.$axios
+          .post(self.$myStore.state.wepAPI.url + role_url + "/login/", data)
+          .then(res => {
+            console.log(res.data);
+            self.$myStore.state.user.fullname = res.data.fullname;
+            self.$myStore.state.user.access_token = res.data.access_token;
+            self.$myStore.state.user.refresh_token = res.data.refresh_token;
+
+            if (self.user.role == "Driver") {
+              self.$myStore.state.user.phone = res.data.phone;
+            } else {
+              self.$myStore.state.user.staff_role = res.data.role;
+              if (res.data.role == 0) {
+                self.$myStore.state.user.staff_role = "admin";
+              } else if (res.data.role == 1) {
+                self.$myStore.state.user.staff_role = "identifier";
+              } else if (res.data.role == 2) {
+                self.$myStore.state.user.staff_role = "receiver";
+              }
+            }
+            console.log(self.$myStore.state.user);
+            self.$router.push(
+              "/" + role_url + "/" + self.$myStore.state.user.staff_role
+            );
+          })
+          .catch(e => {
+            self.loading = false;
+            console.log(e);
+          });
+      }
     }
   },
   watch: {
     customer_update(new_customer, old_customer) {
       console.log(old_customer + " => " + new_customer);
-      
+
       this.getAllCustomer();
-      
     }
   },
   computed: {
     customer_update() {
       var self = this;
       return self.$myStore.state.customer_update_count;
-    },
+    }
   }
 };
 </script>
