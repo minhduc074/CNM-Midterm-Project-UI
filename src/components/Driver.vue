@@ -19,11 +19,10 @@
         <v-text-field v-model="new_address_str" placeholder="Driver Address">
         </v-text-field>
       </label>
-      <v-flex class="text-xs-center" mt-5>
-        <v-btn color="primary" type="submit" @click="Save">Save</v-btn>
+      <v-flex class="text-xs-center" mt-5 v-if="busy" >
+        <v-btn color="primary" type="submit" @click="Save">Done</v-btn>
       </v-flex>
       <v-dialog v-model="dialog" max-width="50%">
-        <v-btn slot="activator" color="primary" >New Customer</v-btn>
         <v-card>
           <v-card-title>
             <span class="headline">New Customer</span>
@@ -85,13 +84,15 @@ export default {
       latLng: null,
       address_str: "",
       new_address_str: "",
-      dialog: null
+      dialog: null,
+      busy: false,
     };
   },
 
   mounted() {
     //this.getCustomerAddress();
     this.getDriverAddress();
+    this.init();
   },
 
   methods: {
@@ -223,8 +224,9 @@ export default {
     },
     Save() {
       var self = this;
-      self.UpdateAddress();
-      //self.UpdateCustomerStatus(2);
+
+      self.UpdateCustomerStatus(6);
+      self.updateDriverStatus(1);
     },
     UpdateAddress() {
       console.log("UpdateAddress");
@@ -342,16 +344,16 @@ export default {
         });
       console.log(self.$myStore.state.driver_customer);
       self.$myStore.state.driver_customer_rejected = [];
+      self.busy = false;
     },
     Accept() {
-      this.UpdateCustomerFromServer();
-      UpdateCustomerStatus(4);
+      var self = this;
+      self.busy = true;
+      self.UpdateCustomerFromServer();
+      self.UpdateCustomerStatus(4);
+      self.updateDriverStatus(2);
       self.$myStore.state.driver_customer_rejected = [];
-      this.dialog = false;
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      }, 300);
+      self.dialog = false;
     },
     silence_login() {
       var self = this;
@@ -379,6 +381,43 @@ export default {
             console.log(e);
           });
       }
+    },
+    init()
+    {
+      self.busy = true;
+      this.updateDriverStatus(1);
+    }, 
+    updateDriverStatus(status)
+    {
+      var self = this;
+      let config = {
+        headers: {
+          "x-access-token": self.$myStore.state.user.access_token
+        }
+      };
+
+      console.log(self.$myStore.state.driver_customer_rejected);
+      self.$myStore.state.driver_customer_rejected.push({
+        username: self.$myStore.state.user.username
+      });
+      var data = {
+        username: self.$myStore.state.user.username,
+        status: status
+      };
+
+      console.log(config);
+      self.loading = true;
+      self.$axios
+        .post(self.$myStore.state.wepAPI.url + "driver/status/", data, config)
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(e => {
+          self.loading = false;
+          console.log(e);
+          if (e.response.status == 401 || e.response.status == 403)
+            self.silence_login();
+        });
     }
   },
   computed: {},
