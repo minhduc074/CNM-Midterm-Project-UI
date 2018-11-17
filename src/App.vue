@@ -158,6 +158,7 @@ export default {
         if (json.event == "new_customer") {
           console.log("New customer event");
           self.$myStore.state.driver_customer = json.customer;
+          self.$myStore.state.driver_customer_rejected = json.driver;
         }
       } else if (json.topic == "customer") {
         if (json.event == "new") {
@@ -205,7 +206,7 @@ export default {
           console.log(self.$myStore.state.customer);
         }
       } else if (json.topic == "staff") {
-        
+
       }
     });
   }

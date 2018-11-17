@@ -113,7 +113,8 @@ export default new Vuex.Store({
         main_address: "Công viên phần mềm Quang Trung, Tân Chánh Hiệp, District 12, Ho Chi Minh City, Vietnam",
         geocoding_address: ""
       }
-    }
+    },
+    driver_customer_rejected: []
   },
   mutations: {
     increment(state) {

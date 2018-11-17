@@ -147,7 +147,8 @@ export default {
             console.log(status);
             console.log(results[0].formatted_address);
             self.new_address_str = results[0].formatted_address;
-            self.$myStore.state.driver_customer.geocoding_address = self.new_address_str;
+            self.$myStore.state.driver_customer.geocoding_address =
+              self.new_address_str;
           } else {
             console.log(status);
             window.alert("No results found");
@@ -167,12 +168,11 @@ export default {
       };
       */
       console.log(self.$myStore.state.driver_customer);
-      self.address_str =
-        self.$myStore.state.driver_customer.address;
+      self.address_str = self.$myStore.state.driver_customer.address;
 
       console.log(self.address_str);
 
-        self.markers = JSON.parse(self.$myStore.state.driver_customer.geocoding);
+      self.markers = JSON.parse(self.$myStore.state.driver_customer.geocoding);
     },
     getDriverAddress() {
       var self = this;
@@ -210,7 +210,7 @@ export default {
       const data = {
         address: self.new_address_str,
         geocoding_address: JSON.stringify(self.latLng),
-        username: "driver1",
+        username: self.$myStore.state.user.username,
         //username: self.$myStore.state.user.username
         lat: self.latLng.lat(),
         lng: self.latLng.lng()
@@ -222,13 +222,17 @@ export default {
       if (self.username != "" && self.password != "") {
         let config = {
           headers: {
-            "x-access-token": self.$myStore.state.user.access_token,
+            "x-access-token": self.$myStore.state.user.access_token
           }
-        }
+        };
         console.log(config);
         self.loading = true;
         self.$axios
-          .post(self.$myStore.state.wepAPI.url + "driver/address/", data, config)
+          .post(
+            self.$myStore.state.wepAPI.url + "driver/address/",
+            data,
+            config
+          )
           .then(res => {
             console.log(res.data);
           })
@@ -236,7 +240,7 @@ export default {
             self.loading = false;
             console.log("error");
             console.log(e);
-            if(e.response.status == 401 || e.response.status == 403)
+            if (e.response.status == 401 || e.response.status == 403)
               self.silence_login();
           });
       }
@@ -245,28 +249,32 @@ export default {
       const self = this;
       var data = {
         status: status,
-        id: self.$myStore.state.current_customer
+        id: self.$myStore.state.driver_customer.id
       };
       // checking if the input is valid
       //if (this.$refs.form.validate()) {
 
       if (self.username != "" && self.password != "") {
-         let config = {
+        let config = {
           headers: {
-            "x-access-token": self.$myStore.state.user.access_token,
+            "x-access-token": self.$myStore.state.user.access_token
           }
-        }
+        };
         console.log(config);
         self.loading = true;
         self.$axios
-          .post(self.$myStore.state.wepAPI.url + "customer/status/", data, config)
+          .post(
+            self.$myStore.state.wepAPI.url + "customer/status/",
+            data,
+            config
+          )
           .then(res => {
             console.log(res.data);
           })
           .catch(e => {
             self.loading = false;
             console.log(e);
-            if(e.response.status == 401 || e.response.status == 403)
+            if (e.response.status == 401 || e.response.status == 403)
               self.silence_login();
           });
       }
@@ -274,22 +282,47 @@ export default {
     UpdateCustomerFromServer() {
       var self = this;
       self.address_str = self.$myStore.state.driver_customer.address;
-      console.log("UpdateCustomerFromServer: " );
+      console.log("UpdateCustomerFromServer: ");
       console.log(self.$myStore.state.driver_customer);
-    self.getCustomerAddress()
-
+      self.getCustomerAddress();
     },
 
     close() {
-      self.$myStore.state.driver_customer = {};
-      this.dialog = false;
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      }, 300);
+      var self = this;
+      self.dialog = false;
+      let config = {
+        headers: {
+          "x-access-token": self.$myStore.state.user.access_token
+        }
+      };
+      
+      console.log(self.$myStore.state.driver_customer_rejected);
+      self.$myStore.state.driver_customer_rejected.push({username: self.$myStore.state.user.username})
+      var data = {
+        customer: self.$myStore.state.driver_customer,
+        driver: self.$myStore.state.driver_customer_rejected,
+      }
+
+      console.log(config);
+      self.loading = true;
+      self.$axios
+        .post(self.$myStore.state.wepAPI.url + "driver/reject/", data, config)
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(e => {
+          self.loading = false;
+          console.log(e);
+          if (e.response.status == 401 || e.response.status == 403)
+            self.silence_login();
+        });
+      console.log(self.$myStore.state.driver_customer);
+      self.$myStore.state.driver_customer_rejected = [];
     },
     Accept() {
       this.UpdateCustomerFromServer();
+      UpdateCustomerStatus(4);
+      self.$myStore.state.driver_customer_rejected = [];
       this.dialog = false;
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
@@ -304,7 +337,10 @@ export default {
       };
       console.log("silence_login");
       var role_url = self.$myStore.state.user.role;
-      if (self.$myStore.state.user.username != "" && self.$myStore.state.user.password != "") {
+      if (
+        self.$myStore.state.user.username != "" &&
+        self.$myStore.state.user.password != ""
+      ) {
         self.loading = true;
         self.$axios
           .post(self.$myStore.state.wepAPI.url + role_url + "/login/", data)
@@ -325,20 +361,19 @@ export default {
 
   watch: {
     customer(new_customer, old_customer) {
-      console.log(old_customer + " => " + new_customer);
-      if(new_customer != {})
-      {
+      console.log("watcher Customer");
+      console.log(old_customer);
+      console.log(new_customer);
+      if (new_customer != {}) {
         this.dialog = true;
       }
-      
-      
     }
   },
   computed: {
     customer() {
       var self = this;
       return self.$myStore.state.driver_customer;
-    },
+    }
   }
 };
 </script>
