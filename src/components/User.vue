@@ -122,11 +122,18 @@ export default {
         data["phone"] = self.user.phone;
       }
 
+      let config = {
+          headers: {
+            "x-access-token": self.$myStore.state.user.access_token,
+          }
+        }
+        console.log(config);
+
       self.loading = true;
       self.$axios
         .post(
           self.$myStore.state.wepAPI.url + self.user.role + "/update/",
-          data
+          data, config
         )
         .then(res => {
           console.log(res.data);

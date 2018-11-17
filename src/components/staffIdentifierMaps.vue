@@ -178,9 +178,15 @@ export default {
 
       console.log(data);
       if (self.username != "" && self.password != "") {
+        let config = {
+          headers: {
+            "x-access-token": self.$myStore.state.user.access_token,
+          }
+        }
+        console.log(config);
         self.loading = true;
         self.$axios
-          .post(self.$myStore.state.wepAPI.url + "customer/address/", data)
+          .post(self.$myStore.state.wepAPI.url + "customer/address/", data, config)
           .then(res => {
             console.log(res.data);
           })
@@ -200,9 +206,15 @@ export default {
       //if (this.$refs.form.validate()) {
 
       if (self.username != "" && self.password != "") {
+        let config = {
+          headers: {
+            "x-access-token": self.$myStore.state.user.access_token,
+          }
+        }
+        console.log(config);
         self.loading = true;
         self.$axios
-          .post(self.$myStore.state.wepAPI.url + "customer/status/", data)
+          .post(self.$myStore.state.wepAPI.url + "customer/status/", data, config)
           .then(res => {
             console.log(res.data);
           })

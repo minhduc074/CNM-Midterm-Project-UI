@@ -18,13 +18,19 @@ export default {
       console.log("Logout");
 
       const data = {"username": self.$myStore.state.user.username, "password": self.$myStore.state.user.password};
+      let config = {
+          headers: {
+            "x-access-token": self.$myStore.state.user.access_token,
+          }
+        }
+        console.log(config);
       self.loading = true;
       self.$axios
         .post(
           self.$myStore.state.wepAPI.url +
             self.$myStore.state.user.role +
             "/logout/",
-          data
+          data, config
         )
         .then(res => {
           console.log(res.data);

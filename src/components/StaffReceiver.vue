@@ -180,9 +180,16 @@ export default {
   methods: {
     getAllCustomer() {
       var self = this;
+      let config = {
+          headers: {
+            "x-access-token": self.$myStore.state.user.access_token,
+          }
+        }
+        console.log(config);
+      
       self.loading = true;
       self.$axios
-        .get(self.$myStore.state.wepAPI.url + "customer/")
+        .get(self.$myStore.state.wepAPI.url + "customer/", config)
         .then(res => {
           console.log(res.data);
           self.$myStore.state.customer = [];
@@ -267,9 +274,16 @@ export default {
 
         console.log(data);
 
+
+        let config = {
+          headers: {
+            "x-access-token": self.$myStore.state.user.access_token,
+          }
+        }
+        console.log(config);
         self.loading = true;
         self.$axios
-          .put(self.$myStore.state.wepAPI.url + "customer/", data)
+          .put(self.$myStore.state.wepAPI.url + "customer/", data, config)
           .then(res => {
             console.log(res.data);
           })

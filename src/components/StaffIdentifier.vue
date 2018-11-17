@@ -111,9 +111,15 @@ export default {
   methods: {
     getAllCustomer() {
       var self = this;
+      let config = {
+          headers: {
+            "x-access-token": self.$myStore.state.user.access_token,
+          }
+        }
+        console.log(config);
       self.loading = true;
       self.$axios
-        .get(self.$myStore.state.wepAPI.url + "customer/")
+        .get(self.$myStore.state.wepAPI.url + "customer/", config)
         .then(res => {
           console.log(res.data);
           self.$myStore.state.customer = [];
@@ -169,10 +175,16 @@ export default {
     update_staff(customer) {
       var self = this;
       var data = { id: customer.id, staff: self.$myStore.state.user.username };
+      let config = {
+          headers: {
+            "x-access-token": self.$myStore.state.user.access_token,
+          }
+        }
+        console.log(config);
 
       self.loading = true;
       self.$axios
-        .post(self.$myStore.state.wepAPI.url + "customer/staff", data)
+        .post(self.$myStore.state.wepAPI.url + "customer/staff", data, config)
         .then(res => {
           console.log(res.data);
         })
@@ -184,10 +196,16 @@ export default {
     update_status(customer, status) {
       var self = this;
       var data = { id: customer.id, status: status };
+      let config = {
+          headers: {
+            "x-access-token": self.$myStore.state.user.access_token,
+          }
+        }
+        console.log(config);
 
       self.loading = true;
       self.$axios
-        .post(self.$myStore.state.wepAPI.url + "customer/status", data)
+        .post(self.$myStore.state.wepAPI.url + "customer/status", data, config)
         .then(res => {
           console.log(res.data);
         })
