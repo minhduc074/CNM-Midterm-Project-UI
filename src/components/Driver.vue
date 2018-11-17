@@ -196,6 +196,28 @@ export default {
         lat: self.latLng.lat(),
         lng: self.latLng.lng()
       };
+
+      var path =
+        "/maps/api/distancematrix/json?units=imperial&origins=" +
+        location.lat +
+        "," +
+        location.lng +
+        "&destinations=";
+      path += "" + self.latLng.lat() + "," + self.latLng.lng() + "|";
+      path += "&key=AIzaSyAMn4lpHhrMrLICzyZrIWAKYeMKXEUkp6U";
+
+      console.log("path: " + path);
+      self.$axios
+        .get("https://maps.googleapis.com" + path)
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(e => {
+          self.loading = false;
+          console.log("error");
+          console.log(e);
+        });
+
       self.reverse_geocoder(location);
       self.UpdateAddress();
     },
@@ -295,13 +317,15 @@ export default {
           "x-access-token": self.$myStore.state.user.access_token
         }
       };
-      
+
       console.log(self.$myStore.state.driver_customer_rejected);
-      self.$myStore.state.driver_customer_rejected.push({username: self.$myStore.state.user.username})
+      self.$myStore.state.driver_customer_rejected.push({
+        username: self.$myStore.state.user.username
+      });
       var data = {
         customer: self.$myStore.state.driver_customer,
-        driver: self.$myStore.state.driver_customer_rejected,
-      }
+        driver: self.$myStore.state.driver_customer_rejected
+      };
 
       console.log(config);
       self.loading = true;
