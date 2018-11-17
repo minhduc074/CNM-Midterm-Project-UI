@@ -11,7 +11,8 @@ const routerOptions = [
   { path: "/staffs/identifier", component: "StaffIdentifier" },
   { path: "/staffs/identifier/maps", component: "StaffIdentifierMaps" },
   { path: "/staffs/receiver", component: "StaffReceiver" },
-  { path: "/driver", component: "Driver" }
+  { path: "/driver", component: "Driver" },
+  { path: "/staffs/admin", component: "Admin" }
 ];
 
 const routes = routerOptions.map(route => {

@@ -49,7 +49,7 @@ export default {
           {
             text: "ID",
             align: "left",
-            sortable: true,
+            sortable: 'desc',
             value: "id"
           },
           {
