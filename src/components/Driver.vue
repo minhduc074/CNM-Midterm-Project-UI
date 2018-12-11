@@ -293,6 +293,43 @@ export default {
           });
       }
     },
+    UpdateDriverCustomer() {
+      console.log("UpdateDriverCustomer");
+      const self = this;
+      const data = {
+        customer: self.$myStore.state.driver_customer.id,
+        driver: self.$myStore.state.user.username,
+      };
+      // checking if the input is valid
+      //if (this.$refs.form.validate()) {
+
+      console.log(data);
+      if (self.username != "" && self.password != "") {
+        let config = {
+          headers: {
+            "x-access-token": self.$myStore.state.user.access_token
+          }
+        };
+        console.log(config);
+        self.loading = true;
+        self.$axios
+          .post(
+            self.$myStore.state.wepAPI.url + "customer/driver/",
+            data,
+            config
+          )
+          .then(res => {
+            console.log(res.data);
+          })
+          .catch(e => {
+            self.loading = false;
+            console.log("error");
+            console.log(e);
+            if (e.response.status == 401 || e.response.status == 403)
+              self.silence_login();
+          });
+      }
+    },
     UpdateCustomerFromServer() {
       var self = this;
       self.address_str = self.$myStore.state.driver_customer.address;
@@ -342,6 +379,7 @@ export default {
       self.UpdateCustomerFromServer();
       self.UpdateCustomerStatus(4);
       self.updateDriverStatus(2);
+      self.UpdateDriverCustomer();
       self.$myStore.state.driver_customer_rejected = [];
       self.dialog = false;
     },

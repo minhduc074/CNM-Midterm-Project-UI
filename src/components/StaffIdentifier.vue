@@ -1,7 +1,7 @@
 <template>
 <div>
     <v-toolbar flat color="white">
-      <v-toolbar-title>My CRUD</v-toolbar-title>
+      <v-toolbar-title>Identifier</v-toolbar-title>
       <v-divider
         class="mx-2"
         inset
@@ -249,6 +249,19 @@ export default {
             self.loading = false;
             console.log(e);
           });
+      }
+    },
+    watch: {
+      customer_update(new_customer, old_customer) {
+        console.log(old_customer + " => " + new_customer);
+
+        this.getAllCustomer();
+      }
+    },
+    computed: {
+      customer_update() {
+        var self = this;
+        return self.$myStore.state.customer_update_count;
       }
     }
   }

@@ -166,12 +166,13 @@ export default {
       self.$router.push("/staffs/Identifier/");
     },
     UpdateAddress() {
+      console.log("UpdateAddress");
       const self = this;
       const data = {
         address: JSON.stringify(self.latLng),
         lat: self.latLng.lat(),
         lng: self.latLng.lng(),
-        id: self.index_customer
+        id: self.$myStore.state.current_customer
       };
       // checking if the input is valid
       //if (this.$refs.form.validate()) {

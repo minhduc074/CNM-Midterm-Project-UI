@@ -41,7 +41,7 @@ import io from "socket.io-client";
 export default {
   data() {
     return {
-      appTitle: "ABCXyZ",
+      appTitle: "Car Booking",
       sidebar: false,
       menuItems: this.getMenu(),
       user: this.$myStore.state.user.username,
@@ -199,6 +199,16 @@ export default {
           self.$myStore.state.customer.forEach(c => {
             if (c.id == cus.id) {
               c.address.staff = cus.staff;
+              self.$myStore.state.customer_update_count++;
+            }
+          });
+
+          console.log(self.$myStore.state.customer);
+        } else if (json.event == "update_driver") {
+          var cus = json.customer;
+          self.$myStore.state.customer.forEach(c => {
+            if (c.id == cus.id) {
+              c.driver = cus.driver;
               self.$myStore.state.customer_update_count++;
             }
           });
