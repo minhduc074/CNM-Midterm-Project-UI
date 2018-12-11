@@ -250,19 +250,6 @@ export default {
             console.log(e);
           });
       }
-    },
-    watch: {
-      customer_update(new_customer, old_customer) {
-        console.log(old_customer + " => " + new_customer);
-
-        this.getAllCustomer();
-      }
-    },
-    computed: {
-      customer_update() {
-        var self = this;
-        return self.$myStore.state.customer_update_count;
-      }
     }
   }
 };
