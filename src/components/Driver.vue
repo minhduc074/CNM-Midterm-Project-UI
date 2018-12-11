@@ -2,24 +2,15 @@
   <div>
     <div>
       <v-flex>
-      <h3>
-        Customer addres: 
-        </h3>
-        <v-text-field v-model="address_str">
-        </v-text-field>
-      
+        <h3>Customer addres:</h3>
+        <v-text-field v-model="address_str"></v-text-field>
       </v-flex>
+      <label></label>
       <label>
-        
+        <h3>Driver addres:</h3>
+        <v-text-field v-model="new_address_str" placeholder="Driver Address"></v-text-field>
       </label>
-      <label>
-        <h3>
-        Driver addres: 
-        </h3>
-        <v-text-field v-model="new_address_str" placeholder="Driver Address">
-        </v-text-field>
-      </label>
-      <v-flex class="text-xs-center" mt-5 v-if="busy" >
+      <v-flex class="text-xs-center" mt-5 v-if="busy">
         <v-btn color="primary" type="submit" @click="Save">Done</v-btn>
       </v-flex>
       <v-dialog v-model="dialog" max-width="50%">
@@ -32,7 +23,10 @@
             <v-container grid-list-md>
               <v-layout column>
                 <v-flex>
-                  <v-text-field v-model="this.$myStore.state.driver_customer.fullname" label="fullname"></v-text-field>
+                  <v-text-field
+                    v-model="this.$myStore.state.driver_customer.fullname"
+                    label="fullname"
+                  ></v-text-field>
                 </v-flex>
                 <v-flex>
                   <v-text-field v-model="this.$myStore.state.driver_customer.phone" label="phone"></v-text-field>
@@ -40,11 +34,13 @@
                 <v-flex>
                   <v-text-field v-model="this.$myStore.state.driver_customer.note" label="note"></v-text-field>
                 </v-flex>
-                 <v-flex>
-                  <v-text-field v-model="this.$myStore.state.driver_customer.address" label="address"></v-text-field>
+                <v-flex>
+                  <v-text-field
+                    v-model="this.$myStore.state.driver_customer.address"
+                    label="address"
+                  ></v-text-field>
                 </v-flex>
               </v-layout>
-              
             </v-container>
           </v-card-text>
 
@@ -55,17 +51,10 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-
     </div>
-    <gmap-map
-      :center="center"
-      :zoom="15"
-      style="width:100%;  height: 600px;"
-      @click="clicked"
-    >
-    <GmapMarker v-if="markers" :position="markers" label="C" :center="center"/>
-    <GmapMarker v-if="latLng" :position="latLng" label="D" :center="center"/>
-
+    <gmap-map :center="center" :zoom="15" style="width:100%;  height: 600px;" @click="clicked">
+      <GmapMarker v-if="markers" :position="markers" label="C" :center="center"/>
+      <GmapMarker v-if="latLng" :position="latLng" label="D" :center="center"/>
     </gmap-map>
   </div>
 </template>
@@ -85,7 +74,7 @@ export default {
       address_str: "",
       new_address_str: "",
       dialog: null,
-      busy: false,
+      busy: false
     };
   },
 
@@ -227,6 +216,7 @@ export default {
 
       self.UpdateCustomerStatus(6);
       self.updateDriverStatus(1);
+      self.busy = false;
     },
     UpdateAddress() {
       console.log("UpdateAddress");
@@ -382,13 +372,11 @@ export default {
           });
       }
     },
-    init()
-    {
+    init() {
       self.busy = true;
       this.updateDriverStatus(1);
-    }, 
-    updateDriverStatus(status)
-    {
+    },
+    updateDriverStatus(status) {
       var self = this;
       let config = {
         headers: {
